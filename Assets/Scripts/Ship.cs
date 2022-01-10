@@ -13,51 +13,52 @@ public class Ship : MonoBehaviour
 
     // cached for performance
     Rigidbody2D rigidBody2d;
-    float colliderScreenOutWidth;
-    float colliderScreenOutHeight;
 
-    // Start is called before the first frame update
+    /// <summary>
+    /// Start is called before the first frame update
+    /// </summary>
     void Start()
     {
         rigidBody2d = GetComponent<Rigidbody2D>();
-        BoxCollider2D collider = GetComponent<BoxCollider2D>();
-        colliderScreenOutWidth = collider.size.x * 0.75f;
-        colliderScreenOutHeight = collider.size.y * 0.75f;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        ProcessPlayerInput();
-        OnScreenEdgeEncounter();
     }
 
     /// <summary>
-    /// Processes player's keyboard input to move the ship
+    /// Update is called once per frame
     /// </summary>
-    void ProcessPlayerInput()
+    void Update()
     {
+        // handle rotation on user's input
         Vector3 rotation = transform.eulerAngles;
 
-        // horizontal movement (left and right)
         float horizontalInput = Input.GetAxis("Horizontal");
         if (horizontalInput != 0)
         {
-            rotation -= Vector3.forward * horizontalInput * 
+            rotation -= Vector3.forward * horizontalInput *
                 RotateDegreesPerSecond * Time.deltaTime;
         }
 
-        // thrust the ship
+        transform.eulerAngles = rotation;
+    }
+
+    /// <summary>
+    /// Called 50 times per second.
+    /// </summary>
+    void FixedUpdate()
+    {
+        // handle thrust on user's input
+        Vector3 rotation = transform.eulerAngles;
         Vector2 velocity = rigidBody2d.velocity;
         Vector2 direction = new Vector2(
                 -Mathf.Sin(rotation.z * Mathf.PI / 180),
                 Mathf.Cos(rotation.z * Mathf.PI / 180));
         direction *= ShipAcceleration;
         float thrust = Input.GetAxis("Thrust");
+
         if (thrust > 0)
         {
             // apply force
-            rigidBody2d.AddForce(direction, ForceMode2D.Force);
+            if (velocity.magnitude < 2.6f) rigidBody2d.AddForce(direction * 10, ForceMode2D.Force);
+            else rigidBody2d.AddForce(direction, ForceMode2D.Force);
 
             // constraint velocity
             velocity = rigidBody2d.velocity;
@@ -96,32 +97,5 @@ public class Ship : MonoBehaviour
         }
 
         rigidBody2d.velocity = velocity;
-        transform.eulerAngles = rotation;
-    }
-
-    /// <summary>
-    /// If the ship leaves the screen, 
-    /// teleport it to the other edge
-    /// </summary>
-    void OnScreenEdgeEncounter()
-    {
-        Vector3 position = transform.position;
-        if (position.x + colliderScreenOutWidth < ScreenUtils.ScreenLeft)
-        {
-            position.x = ScreenUtils.ScreenRight + colliderScreenOutWidth;
-        }
-        else if (position.x - colliderScreenOutWidth > ScreenUtils.ScreenRight)
-        {
-            position.x = ScreenUtils.ScreenLeft - colliderScreenOutWidth; 
-        }
-        if (position.y + colliderScreenOutHeight < ScreenUtils.ScreenBottom)
-        {
-            position.y = ScreenUtils.ScreenTop + colliderScreenOutHeight;
-        }
-        if (position.y - colliderScreenOutHeight > ScreenUtils.ScreenTop)
-        {
-            position.y = ScreenUtils.ScreenBottom - colliderScreenOutHeight;
-        }
-        transform.position = position;
     }
 }

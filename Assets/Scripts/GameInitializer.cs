@@ -9,4 +9,11 @@ public class GameInitializer : MonoBehaviour
     {
         ScreenUtils.Initialize();
     }
+
+    // Start is called before the first frame update
+    private void Start()
+    {
+        Instantiate(Resources.Load<GameObject>(@"Prefabs/Ship"), 
+            ScreenUtils.ScreenCenter, Quaternion.identity);
+    }
 }

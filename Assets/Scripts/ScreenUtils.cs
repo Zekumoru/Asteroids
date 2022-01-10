@@ -7,6 +7,7 @@ public static class ScreenUtils
     #region Fields
 
     // cached for better performance
+    static Vector3 screenCenter;
     static float screenTop;
     static float screenBottom;
     static float screenLeft;
@@ -15,6 +16,11 @@ public static class ScreenUtils
     #endregion
 
     #region Properties
+
+    public static Vector3 ScreenCenter
+    {
+        get { return screenCenter; }
+    }
 
     public static float ScreenTop
     {
@@ -45,13 +51,15 @@ public static class ScreenUtils
     /// </summary>
     public static void Initialize()
     {
-        // get screen upper right and lower left position
+        // get screen upper right and lower left position, and center
         float screenZ = -Camera.main.transform.position.z;
+        screenCenter = new Vector3(Screen.width / 2, Screen.height / 2, screenZ);
         Vector3 lowerLeftCornerLocation = new Vector3(0, 0, screenZ);
         Vector3 upperRightCornerLocation = new Vector3(
             Screen.width, Screen.height, screenZ);
 
         // convert to world location
+        screenCenter = Camera.main.ScreenToWorldPoint(screenCenter);
         lowerLeftCornerLocation = 
             Camera.main.ScreenToWorldPoint(lowerLeftCornerLocation);
         upperRightCornerLocation = 
