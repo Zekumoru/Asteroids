@@ -14,6 +14,8 @@ public class GameInitializer : MonoBehaviour
     private void Start()
     {
         Instantiate(Resources.Load<GameObject>(@"Prefabs/Ship"), 
-            ScreenUtils.ScreenCenter, Quaternion.identity);
+            new Vector3(ScreenUtils.ScreenMiddleWidth, 
+            ScreenUtils.ScreenMiddleHeight, ScreenUtils.ScreenZ), 
+            Quaternion.identity);
     }
 }

@@ -52,6 +52,12 @@ public class ScreenWrapper : MonoBehaviour
             colliderWidth = capsuleCollider2D.size.x;
             colliderHeight = capsuleCollider2D.size.y;
         }
+        else if (collider is CircleCollider2D)
+        {
+            CircleCollider2D circleCollider2D = (CircleCollider2D) collider;
+            colliderWidth = circleCollider2D.radius * 2;
+            colliderHeight = circleCollider2D.radius * 2;
+        }
     }
 
 }

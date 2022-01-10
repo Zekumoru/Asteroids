@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Ship : MonoBehaviour
 {
+    #region Fields
+
     // movement related  fields
     const float RotateDegreesPerSecond = 270f;
     const float ShipSpeedThreshold = 7.2f;
@@ -12,13 +14,19 @@ public class Ship : MonoBehaviour
     const float BrakeAcceleration = 5.6f;
 
     // cached for performance
+    GameObject prefabExplosion;
     Rigidbody2D rigidBody2d;
+
+    #endregion
+
+    #region Methods
 
     /// <summary>
     /// Start is called before the first frame update
     /// </summary>
     void Start()
     {
+        prefabExplosion = Resources.Load<GameObject>(@"Prefabs/Explosion");
         rigidBody2d = GetComponent<Rigidbody2D>();
     }
 
@@ -98,4 +106,15 @@ public class Ship : MonoBehaviour
 
         rigidBody2d.velocity = velocity;
     }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.GetComponent<Asteroid>() != null)
+        {
+            Instantiate(prefabExplosion, transform.position, Quaternion.identity);
+            Destroy(gameObject);
+        }
+    }
+
+    #endregion
 }
