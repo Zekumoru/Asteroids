@@ -3,7 +3,12 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Ship
+  - AsteroidSmall
+  - AsteroidMedium
+  - AsteroidBig
+  - Bullet
   layers:
   - Default
   - TransparentFX
@@ -17,7 +22,7 @@ TagManager:
   - 
   - Ship
   - Asteroid
-  - 
+  - Bullet
   - 
   - 
   - 

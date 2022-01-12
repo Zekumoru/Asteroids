@@ -12,6 +12,7 @@ public class Asteroid : MonoBehaviour
 
     // saved for efficiency
     Rigidbody2D rigidbody2d;
+    GameObject asteroidMediumAnim;
 
     #endregion
 
@@ -24,6 +25,31 @@ public class Asteroid : MonoBehaviour
     {
         // initialized for efficiency
         rigidbody2d = GetComponent<Rigidbody2D>();
+        asteroidMediumAnim = 
+            Resources.Load<GameObject>(@"Prefabs/AsteroidMediumAnim");
+
+        // initialize direction
+        MoveInRandomDirection();
+    }
+
+    /// <summary>
+    /// Check if collided with a bullet
+    /// </summary>
+    /// <param name="collision"></param>
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Bullet"))
+        {
+            Vector3 position = gameObject.transform.position;
+            Quaternion rotation = gameObject.transform.rotation;
+            string tag = gameObject.tag;
+            Destroy(collision.gameObject);
+            Destroy(gameObject);
+            if (tag.Equals("AsteroidMedium"))
+            {
+                Instantiate(asteroidMediumAnim, position, rotation);
+            }
+        }
     }
 
     /// <summary>

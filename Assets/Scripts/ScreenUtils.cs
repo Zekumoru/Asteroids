@@ -11,9 +11,7 @@ public static class ScreenUtils
     static float screenBottom;
     static float screenLeft;
     static float screenRight;
-    static float screenMiddleWidth;
-    static float screenMiddleHeight;
-    static float screenZ;
+    static Vector3 screenCenter;
 
     #endregion
 
@@ -39,19 +37,9 @@ public static class ScreenUtils
         get { return screenLeft; }
     }
 
-    public static float ScreenMiddleWidth
+    public static Vector3 ScreenCenter
     {
-        get { return screenMiddleWidth; }
-    }
-
-    public static float ScreenMiddleHeight
-    {
-        get { return screenMiddleHeight; }
-    }
-
-    public static float ScreenZ
-    {
-        get { return screenZ; }
+        get { return screenCenter; }
     }
 
     #endregion
@@ -76,13 +64,12 @@ public static class ScreenUtils
             Camera.main.ScreenToWorldPoint(upperRightCornerLocation);
 
         // assign class fields
-        screenZ = lowerLeftCornerLocation.z;
         screenTop = upperRightCornerLocation.y;
         screenBottom = lowerLeftCornerLocation.y;
         screenLeft = lowerLeftCornerLocation.x;
         screenRight = upperRightCornerLocation.x;
-        screenMiddleWidth = (screenLeft + screenRight) / 2;
-        screenMiddleHeight = (screenBottom + screenTop) / 2;
+        screenCenter = new Vector3((screenLeft + screenRight) / 2,
+            (screenBottom + screenTop) / 2, screenZ);
     }
 
     #endregion

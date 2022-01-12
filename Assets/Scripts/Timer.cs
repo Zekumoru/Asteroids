@@ -37,6 +37,14 @@ public class Timer : MonoBehaviour
 	}
 
 	/// <summary>
+	/// Gets the elapsed second
+	/// </summary>
+	public float ElapsedSeconds
+	{
+		get { return elapsedSeconds; }
+    }
+
+	/// <summary>
 	/// Gets whether or not the timer has finished running
 	/// This property returns false if the timer has never been started
 	/// </summary>

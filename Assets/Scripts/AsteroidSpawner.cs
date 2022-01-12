@@ -4,73 +4,95 @@ using UnityEngine;
 
 public class AsteroidSpawner : MonoBehaviour
 {
-    // constants
-    const float MinDirectionRange = -0.3f;
-    const float MaxDirectionRange = 0.3f;
-
-    // timer support
-    Timer spawnTimer;
-    const float SpawnTime = 1.0f;
+    const int SpawnNumberOfAsteroids = 30;
 
     // Start is called before the first frame update
     void Start()
     {
-        Spawn4AsteroidsOnScreenMiddleEdges();
-
-        // get timer ready then run
-        spawnTimer = gameObject.AddComponent<Timer>();
-        spawnTimer.Duration = SpawnTime;
-        spawnTimer.Run();
+        SpawnAsteroids(SpawnNumberOfAsteroids);
     }
 
-    // Update is called once per frame
-    void Update()
+    void SpawnAsteroids(int numberOfAsteroids)
     {
-        #region Periodic Spawn (Not used)
-        //if (spawnTimer.Finished)
-        //{
-        //    Vector3 spawnLocation = new Vector3(0, 0, -Camera.main.transform.position.z);
-        //    spawnLocation = Camera.main.ScreenToWorldPoint(spawnLocation);
-        //    SpawnAsteroid(spawnLocation);
-        //    spawnTimer.Run();
-        //}
-        #endregion
+        Vector3 location = ScreenUtils.ScreenCenter;
+
+        // saved for efficiency
+        float width = ScreenUtils.ScreenRight - ScreenUtils.ScreenLeft;
+        float height = ScreenUtils.ScreenTop - ScreenUtils.ScreenBottom;
+
+        // generate asteroids
+        for (int i = 0; i < numberOfAsteroids; i++)
+        {
+            // pick edge
+            int randomEdge = Random.Range(0, 4);
+            if (randomEdge == 0)
+            {
+                // top edge
+                location.x = Random.Range(ScreenUtils.ScreenLeft,
+                    ScreenUtils.ScreenRight);
+                location.y = ScreenUtils.ScreenTop;
+            }
+            else if (randomEdge == 1)
+            {
+                // right edge
+                location.x = ScreenUtils.ScreenRight;
+                location.y = Random.Range(ScreenUtils.ScreenBottom,
+                    ScreenUtils.ScreenTop);
+            }
+            else if (randomEdge == 2)
+            {
+                // bottom edge
+                location.x = Random.Range(ScreenUtils.ScreenLeft,
+                    ScreenUtils.ScreenRight);
+                location.y = ScreenUtils.ScreenBottom;
+            }
+            else
+            {
+                // left edge
+                location.x = ScreenUtils.ScreenLeft;
+                location.y = Random.Range(ScreenUtils.ScreenBottom,
+                    ScreenUtils.ScreenTop);
+            }
+
+            SpawnAsteroid(location);
+        }
     }
 
     // Spawns 4 asteroids in the middle of the screen edges
     void Spawn4AsteroidsOnScreenMiddleEdges()
     {
+        const float MinDirectionRange = -0.3f;
+        const float MaxDirectionRange = 0.3f;
         Vector2 direction;
         Vector3 location;
 
         // spawn in the middle top edge then move to center
-        location = new Vector3(ScreenUtils.ScreenMiddleWidth,
-            ScreenUtils.ScreenTop, ScreenUtils.ScreenZ);
+        location = ScreenUtils.ScreenCenter;
+        location.y = ScreenUtils.ScreenTop;
         direction = new Vector2(Random.Range(MinDirectionRange, MaxDirectionRange), -1);
         SpawnAsteroid(location).
             GetComponent<Asteroid>().MoveInDirection(direction);
 
         // spawn in the middle right edge then move to center
-        location = new Vector3(ScreenUtils.ScreenRight,
-            ScreenUtils.ScreenMiddleHeight, ScreenUtils.ScreenZ);
+        location = ScreenUtils.ScreenCenter;
+        location.x = ScreenUtils.ScreenRight;
         direction = new Vector2(-1, Random.Range(MinDirectionRange, MaxDirectionRange));
         SpawnAsteroid(location).
             GetComponent<Asteroid>().MoveInDirection(direction);
 
         // spawn in the middle bottom edge then move to center
-        location = new Vector3(ScreenUtils.ScreenMiddleWidth,
-            ScreenUtils.ScreenBottom, ScreenUtils.ScreenZ);
+        location = ScreenUtils.ScreenCenter;
+        location.y = ScreenUtils.ScreenBottom;
         direction = new Vector2(Random.Range(MinDirectionRange, MaxDirectionRange), 1);
         SpawnAsteroid(location).
             GetComponent<Asteroid>().MoveInDirection(direction);
 
         // spawn in the middle left edge then move to center
-        location = new Vector3(ScreenUtils.ScreenLeft,
-            ScreenUtils.ScreenMiddleHeight, ScreenUtils.ScreenZ);
+        location = ScreenUtils.ScreenCenter;
+        location.x = ScreenUtils.ScreenLeft;
         direction = new Vector2(1, Random.Range(MinDirectionRange, MaxDirectionRange));
         SpawnAsteroid(location).
             GetComponent<Asteroid>().MoveInDirection(direction);
-
     }
 
     // Spawns an asteroid

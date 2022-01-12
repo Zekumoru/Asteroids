@@ -13,6 +13,12 @@ public class Ship : MonoBehaviour
     const float RotationThreshold = 5;
     const float BrakeAcceleration = 5.6f;
 
+    // input related
+    const float FireSpeedInSeconds = 0.3f;
+
+    // timer support
+    Timer fireTimer;
+
     // cached for performance
     GameObject prefabExplosion;
     Rigidbody2D rigidBody2d;
@@ -28,6 +34,11 @@ public class Ship : MonoBehaviour
     {
         prefabExplosion = Resources.Load<GameObject>(@"Prefabs/Explosion");
         rigidBody2d = GetComponent<Rigidbody2D>();
+
+        // create and start fire timer
+        fireTimer = gameObject.AddComponent<Timer>();
+        fireTimer.Duration = FireSpeedInSeconds;
+        fireTimer.Run();
     }
 
     /// <summary>
@@ -35,7 +46,13 @@ public class Ship : MonoBehaviour
     /// </summary>
     void Update()
     {
-        // handle rotation on user's input
+        InputRotation();
+        InputFire();
+    }
+
+    // handle rotation on user's input
+    void InputRotation()
+    {
         Vector3 rotation = transform.eulerAngles;
 
         float horizontalInput = Input.GetAxis("Horizontal");
@@ -46,6 +63,22 @@ public class Ship : MonoBehaviour
         }
 
         transform.eulerAngles = rotation;
+    }
+
+    // handle firing bullets
+    void InputFire()
+    {
+        // check if timer is finished
+        if (fireTimer.Finished && Input.GetAxis("Fire") > 0)
+        {
+            // instantiate bullet then fire
+            Instantiate(Resources.Load<GameObject>(@"Prefabs/Bullet"),
+                gameObject.transform.position, 
+                gameObject.transform.rotation);
+
+            // restart timer
+            fireTimer.Run();
+        }
     }
 
     /// <summary>
@@ -109,7 +142,9 @@ public class Ship : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.GetComponent<Asteroid>() != null)
+        if (collision.gameObject.CompareTag("AsteroidSmall")
+            || collision.gameObject.CompareTag("AsteroidMedium")
+            || collision.gameObject.CompareTag("AsteroidBig"))
         {
             Instantiate(prefabExplosion, transform.position, Quaternion.identity);
             Destroy(gameObject);

@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: -7401741066537107407}
   m_Layer: 10
   m_Name: Ship
-  m_TagString: Untagged
+  m_TagString: Ship
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -145,7 +145,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0af7120426c425744a949b02b52dc5d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabExplosion: {fileID: 617775202066162836, guid: 985fc8d3a13a42e4c937fe7e75d1bb35, type: 3}
 --- !u!114 &-7401741066537107407
 MonoBehaviour:
   m_ObjectHideFlags: 0
