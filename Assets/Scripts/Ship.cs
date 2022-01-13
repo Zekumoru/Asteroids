@@ -146,8 +146,9 @@ public class Ship : MonoBehaviour
             || collision.gameObject.CompareTag("AsteroidMedium")
             || collision.gameObject.CompareTag("AsteroidBig"))
         {
-            Instantiate(prefabExplosion, transform.position, Quaternion.identity);
+            collision.gameObject.GetComponent<Asteroid>().Explode();
             Destroy(gameObject);
+            Instantiate(prefabExplosion, transform.position, Quaternion.identity);
         }
     }
 
